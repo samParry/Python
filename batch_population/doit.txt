@@ -1,0 +1,22 @@
+#!/bin/csh
+
+#SBATCH --time=72:00:00 # walltime, abbreviated by -t
+#SBATCH -o bingobeam-w1-%j.out-%N # name of the stdout
+#SBATCH -e bingobeam-w1-%j.err-%N # name of the stderr
+#SBATCH --nodes=1
+#SBATCH --ntasks=1 # number of MPI tasks, abbreviated by -n # additional information for allocated clusters 
+#SBATCH --account=hochhalter-np # account - abbreviated by -A 
+#SBATCH --partition=hochhalter-shared-np # partition, abbreviated by -p # # set data and working directories
+
+setenv WORKDIR $PWD
+
+setenv SCRDIR /scratch/kingspeak/serial/$USER/$SLURM_JOB_ID
+mkdir -p $SCRDIR
+cp -r $WORKDIR/* $SCRDIR
+cd $SCRDIR
+
+source /uufs/chpc.utah.edu/common/home/u6019587/.venv/bingoenv/bin/activate.csh
+setenv PYTHONPATH /uufs/chpc.utah.edu/common/home/u6019587/src/bingo:/uufs/chpc.utah.edu/common/home/u6019587/src/bingo_diffeq_tf
+
+python /uufs/chpc.utah.edu/common/home/u6019587/src/bingo_diffeq_tf/soln_tests.py -e ./beam_bending.json
+cp -r $SCRDIR/* $WORKDIR
