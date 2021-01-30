@@ -3,6 +3,7 @@ import json
 import os
 import shutil
 
+
 def modifyBendingBeam(tdata, filepath):
     """
     alters the original beam_bending.json file
@@ -12,7 +13,6 @@ def modifyBendingBeam(tdata, filepath):
     :param tdata: number of training points
     :param filepath: location to store new .json file
     """
-
     # copy of the original beam_bending.json expressed as a dictionary
     new_json_as_dict = {
         "problem": "beam_bending",
@@ -35,10 +35,8 @@ def modifyBendingBeam(tdata, filepath):
         "log_file": "log",
         "checkpoint_file": "chk"
     }
-
     # change number of training points
     new_json_as_dict["problem_args"][3] = tdata
-
     # Write new json file to given directory
     filename = filepath + "beam_bending.json"
     with open(filename, 'w') as outfile:
@@ -51,11 +49,10 @@ def make_trials(tdata, t_path):
     :param t_path: path of the parent directory containing the trials
     """
     files = ['N:/tests/bnd_tdata/doit.slurm', 'N:/tests/bnd_tdata/soln_tests_cas_simpl.py']
-
     # create beam_bending.json
     modifyBendingBeam(tdata, t_path)
 
-    for i in range(1,31):
+    for i in range(1, 31):
         trial = 'trial' + str(i)
         trial_path = t_path + trial + '/'
         os.mkdir(trial_path)
@@ -71,9 +68,8 @@ def make_tdir(tdata_list, test_path):
     :param tdata_list: list of training data points
     :param test_path: absolute path to the test directory
     """
-
     for tdata in tdata_list:
-        t_path = '{1}t{2}/'.format(test_path, tdata)
+        t_path = '{0}t{1}/'.format(test_path, tdata)
         os.mkdir(t_path)
         make_trials(tdata, t_path)
 
